@@ -2,8 +2,10 @@ import json
 import re
 
 def update_records(dictionary_record, id, property, value):
-    
-   
+    try:
+        dictionary_record = eval(dictionary_record.replace("'", "\""))
+    except:
+        return "Invalid"
    
     new_record = dictionary_record
 
@@ -50,16 +52,10 @@ def update_records(dictionary_record, id, property, value):
     return 0
 
 
-
-# value = "{'2548': {'albumTitle': 'Slippery When Wet'}} | 2548 | artist | Bon Jovi"
+# value = "{InvalidString} | 2548 | artist | Bon Jovi"
 value= input()
 value =[str(e) for e in value.split("|")]
+output = update_records(dictionary_record=value[0], id=value[1], property=value[2], value=value[3])
+print(output)
 
-try:
-    value[0] = eval(value[0].replace("'", "\""))
 
-except:
-  print("Invalid")
-else:
-    output = update_records(dictionary_record=value[0], id=value[1], property=value[2], value=value[3])
-    print(output)
