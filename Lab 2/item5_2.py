@@ -2,11 +2,22 @@ import json
 import re
 
 def update_records(dictionary_record, id, property, value):
+    
+   
+   
     new_record = dictionary_record
+
+
 
     id = id.replace(" ", "")
     property = property.strip()
     value = value.strip()
+
+    if int(id) <= 0:
+        return "Invalid"
+
+    if id not in new_record.keys():
+        new_record[id] = {}
 
 
     if property in new_record[id] and property == "tracks":
@@ -18,10 +29,15 @@ def update_records(dictionary_record, id, property, value):
         new_record[id][property] = value
     
 
-    if value == "\'\'":
+   
+    if value == "\'\'" and property == "artist":
+        return "Invalid"
+    elif value == "\'\'":
         new_record[id].pop(property)
 
-  
+    property_check=["albumTitle","artist","tracks"]
+    if property not in property_check:
+        return "Invalid"
 
     # print(dictionary_record)
     # print(id)
@@ -33,12 +49,17 @@ def update_records(dictionary_record, id, property, value):
 
     return 0
 
-#"{'2548': {'albumTitle': 'Slippery When Wet', 'artist': 'Bon Jovi'}} | 2548 | tracks | Wanted Dead or Alive"
-# "{'2548': {'albumTitle': 'Slippery When Wet', 'artist': 'Bon Jovi', 'tracks': ['Wanted Dead or Alive']}}"
 
-# value = "{'2548': {'albumTitle': 'Slippery When Wet'}} | 1 | artist | Bon Jovi"
+
+# value = "{'2548': {'albumTitle': 'Slippery When Wet'}} | 2548 | artist | Bon Jovi"
 value= input()
 value =[str(e) for e in value.split("|")]
-value[0] = eval(value[0].replace("'", "\""))
-output = update_records(dictionary_record=value[0], id=value[1], property=value[2], value=value[3])
-print(output)
+
+try:
+    value[0] = eval(value[0].replace("'", "\""))
+
+except:
+  print("Invalid")
+else:
+    output = update_records(dictionary_record=value[0], id=value[1], property=value[2], value=value[3])
+    print(output)
