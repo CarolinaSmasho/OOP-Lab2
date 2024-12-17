@@ -3,11 +3,12 @@ import re
 
 def update_records(dictionary_record, id, property, value):
     try:
-        dictionary_record = eval(dictionary_record.replace("'", "\""))
+        temp_record = eval(dictionary_record.replace("'", "\""))
     except:
         return "Invalid"
-   
-    new_record = dictionary_record
+    temp_record = eval(dictionary_record.replace("'", "\""))
+
+    new_record = dict(temp_record)
 
 
 
@@ -28,15 +29,17 @@ def update_records(dictionary_record, id, property, value):
         if property == "tracks":
         # value = str(value).split("\"")
             value = re.split('\" |, ', value)
+        
+        if value == "\'\'" and property not in temp_record[id]:
+            return "Invalid"
         new_record[id][property] = value
     
 
    
-    if value == "\'\'" and property == "artist":
-        return "Invalid"
-    elif value == "\'\'":
+    
+    if value == "\'\'" and property in temp_record[id]:
         new_record[id].pop(property)
-
+        
     property_check=["albumTitle","artist","tracks"]
     if property not in property_check:
         return "Invalid"
@@ -52,10 +55,8 @@ def update_records(dictionary_record, id, property, value):
     return 0
 
 
-# value = "{InvalidString} | 2548 | artist | Bon Jovi"
+# value = "{'2548': {'albumTitle': 'Slippery When Wet'}} | 2548 | artist | ''"
 value= input()
 value =[str(e) for e in value.split("|")]
 output = update_records(dictionary_record=value[0], id=value[1], property=value[2], value=value[3])
 print(output)
-
-
